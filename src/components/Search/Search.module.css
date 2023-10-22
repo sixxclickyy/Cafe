@@ -1,0 +1,30 @@
+.container {
+    width: 30%;
+    margin-right: 70px;
+    position: relative;
+}
+
+.input {
+    width: 100%;
+    min-height: 23px;
+    height: auto !important;
+    display: inline-block;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    box-shadow: 15px 20px 45px 0px rgba(233, 233, 233, 0.25);
+    outline: none;
+    font-size: var(--font-size);
+    padding: 16px 30px 16px 40px;
+}
+
+.img {
+    position: absolute;
+    top: 20px;
+    left: 14px;
+    z-index: 1;
+}
+
+::-webkit-input-placeholder {
+    color: #c4c4c4;
+    font-size: 16px;
+}

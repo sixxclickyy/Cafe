@@ -1,0 +1,34 @@
+.btn {
+    border: none;
+    color: var(--white);
+    font-size: var(--font-size);
+    transition: background 0.25s;
+    border-radius: 29px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.accent:hover {
+    background-color: var(--primary-hover-color);
+    cursor: pointer;
+}
+
+.accent {
+    background-color: var(--primary-color);
+}
+
+.small {
+    width: 141px;
+    height: 44px;
+    padding: 10px 25px;
+}
+
+.big {
+    width: 248px;
+    height: 60px;
+    padding: 19px 59px;
+    text-transform: uppercase;
+}

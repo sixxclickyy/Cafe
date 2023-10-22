@@ -1,0 +1,16 @@
+.input {
+    width: 25%;
+    min-height: 23px;
+    height: auto !important;
+    display: inline-block;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    box-shadow: 15px 20px 45px 0px rgba(233, 233, 233, 0.25);
+    outline: none;
+    font-size: var(--font-size);
+    padding: 22px;
+}
+
+::-webkit-input-placeholder {
+    color: #c4c4c4;
+}
