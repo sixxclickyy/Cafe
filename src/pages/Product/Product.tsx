@@ -1,11 +1,20 @@
-import { useParams } from "react-router-dom";
+import { Await, useLoaderData } from "react-router-dom";
+import { ProductInt } from "../../interfaces/product.interface";
+import { Suspense } from "react";
 
 const Product = () => {
-
-    const { id } = useParams();
+    const data = useLoaderData() as { data: ProductInt };
     return (
         <div>
-            Product - {id}
+            <Suspense fallback={<>Loading...</>}>
+                <Await
+                    resolve={data.data}
+                >
+                    {({ data }: { data: ProductInt }) => (
+                        <>Product - {data.title}</>
+                    )}
+                </Await>
+            </Suspense>
         </div>
     )
 }

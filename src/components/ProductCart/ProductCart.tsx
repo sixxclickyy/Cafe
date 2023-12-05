@@ -4,7 +4,8 @@ import { ProductCart } from './ProductCart.props.ts';
 import card from '/public/group.svg';
 import star from '/public/star.svg';
 
-const ProductCart = ({ id, rating, description, title, image, price }: ProductCart) => {
+const ProductCart = ({ id, rating, description, title, image = 'public/pizza.png', price }: ProductCart) => {
+
     return (
         <Link to={`/product/${id}`} className={style.link}>
             <div className={style.container}>

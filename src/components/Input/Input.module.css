@@ -1,5 +1,5 @@
 .input {
-    width: 25%;
+    min-width: 280px;
     min-height: 23px;
     height: auto !important;
     display: inline-block;

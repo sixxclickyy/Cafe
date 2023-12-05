@@ -1,6 +1,6 @@
 .container {
     display: flex;
-    height: 100vh;
+    min-height: 970px;
 }
 
 .right {
@@ -19,6 +19,7 @@
 
 .footer {
     margin-top: auto;
+    padding-top: 30px;
 }
 
 .h4 {

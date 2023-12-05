@@ -33,8 +33,6 @@ export function Layout() {
             </div>
             <div className={style.footer}>
                 <div className={style.btn}>
-                    {/*<img src={exit} alt="" />
-                    <span>Выйти</span>*/}
                     <Button>
                         <img src={exit} alt="" />
                         Выйти
