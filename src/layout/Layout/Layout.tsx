@@ -13,8 +13,8 @@ export function Layout() {
             <div className={style.info}>
                 <img src={img} alt="" />
                 <span>
-                    <h4 className={style.h4}>Антон Ларичев</h4>
-                    <span className={style.email}>alaricode@ya.ru</span>
+                    <h4 className={style.h4}>Никнейм</h4>
+                    <span className={style.email}>example@gmail.com</span>
                 </span>
             </div>
             <div className={style.nav}>
