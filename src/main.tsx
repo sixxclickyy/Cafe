@@ -13,6 +13,7 @@ import { AuthLayout } from './layout/Auth/AuthLayout.tsx';
 import { Login } from './pages/Login/Login.tsx';
 import { Registration } from './pages/Registration/Registration.tsx';
 import { RequireAuth } from './helpers/RequireAuth.tsx';
+import Admin from './pages/Admin/Admin.tsx';
 
 const Menu = lazy(() => import('./pages/Menu/Menu'));
 
@@ -42,7 +43,11 @@ const router = createBrowserRouter([
                         })
                     });
                 }
-            }
+            },
+            {
+                path: '/admin',
+                element: <Admin />
+            },
         ]
     },
     {
