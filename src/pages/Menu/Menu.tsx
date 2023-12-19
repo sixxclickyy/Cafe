@@ -31,7 +31,7 @@ function Menu() {
         getData();
     }, [])
 
-    return <div>
+    return <div className={style.main}>
         <div className={style.container}>
             <Header>Меню</Header>
             <Search placeholder="Введите блюдо или состав" />

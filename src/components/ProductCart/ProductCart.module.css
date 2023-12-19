@@ -1,5 +1,5 @@
 .container {
-    max-width: 320px;
+    width: 100%;
     border-radius: 20px;
     /*position: relative;*/
 }
@@ -79,4 +79,10 @@
 .link {
     text-decoration: none;
     color: var(--black);
+}
+
+@media (max-width: 805px) {
+    .container {
+        width: 100%;
+    }
 }
