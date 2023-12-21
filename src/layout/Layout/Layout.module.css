@@ -1,6 +1,6 @@
 .container {
     display: flex;
-    height: 100vh;
+    min-height: 1400px;
 }
 
 .right {

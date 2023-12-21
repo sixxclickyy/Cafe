@@ -21,13 +21,13 @@
 }
 
 .small {
-    width: 141px;
+    width: auto;
     height: 44px;
     padding: 10px 25px;
 }
 
 .big {
-    width: 248px;
+    min-width: 248px;
     height: 60px;
     padding: 19px 59px;
     text-transform: uppercase;

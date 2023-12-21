@@ -20,7 +20,7 @@ const Menu = lazy(() => import('./pages/Menu/Menu'));
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <RequireAuth><Layout /></RequireAuth>,
+        element: <Layout />,
         children: [
             {
                 path: '/',
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/cart',
-                element: <Cart />
+                element: <RequireAuth><Cart /></RequireAuth>
             },
             {
                 path: '/product/:id',
