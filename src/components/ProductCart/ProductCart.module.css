@@ -79,10 +79,23 @@
 .link {
     text-decoration: none;
     color: var(--black);
+    /*width: 100%;*/
 }
 
-@media (max-width: 805px) {
-    .container {
+@media (max-width: 1266px) {
+    .link {
         width: 100%;
+    }
+}
+
+@media (max-width: 896px) {
+    .link {
+        width: 40%;
+    }
+}
+
+@media (max-width: 628px) {
+    .link {
+        width: 90%;
     }
 }

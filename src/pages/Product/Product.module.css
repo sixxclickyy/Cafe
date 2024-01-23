@@ -82,7 +82,7 @@
     .info-container {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        /*align-items: center;*/
     }
 
     .img {
@@ -107,5 +107,11 @@
 
     .header {
         gap: 0px;
+    }
+}
+
+@media (max-width: 896px) {
+    .main {
+        width: 80%;
     }
 }

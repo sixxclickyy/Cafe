@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import style from './Layout.module.css';
 import img from '/public/Intersect.png';
 import exit from '/public/exit.svg';
@@ -6,9 +6,29 @@ import menu from '/public/menu-icon.svg';
 import cart from '/public/cart-icon.svg';
 import Button from '../../components/Button/Button';
 import cn from 'classnames';
+import { HiddenBurger } from '../../components/hidden-burger/hidden-burger';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store/store';
+import { profile, userAction } from '../../store/user.slice';
+import { useEffect } from 'react';
+import { RootState } from '../../store/store';
 
 export function Layout() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+    const prof = useSelector((s: RootState) => s.user.profile)
+
+    useEffect(() => {
+        dispatch(profile());
+    }, []);
+
+    const logout = () => {
+        dispatch(userAction.logOut())
+        navigate('/auth/login');
+    }
+
     return <div className={style.container}>
+        <HiddenBurger />
         <div className={`${style.item} ${style.left}`}>
             <div className={style.info}>
                 <img src={img} alt="" />
@@ -33,7 +53,7 @@ export function Layout() {
             </div>
             <div className={style.footer}>
                 <div className={style.btn}>
-                    <Button>
+                    <Button onClick={logout}>
                         <img src={exit} alt="" />
                         Выйти
                     </Button>

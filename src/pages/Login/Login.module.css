@@ -50,3 +50,10 @@
     cursor: pointer;
     text-decoration: none;
 }
+
+.err {
+    background: #db810c;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+}

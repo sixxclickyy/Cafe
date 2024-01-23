@@ -14,6 +14,8 @@ import { Login } from './pages/Login/Login.tsx';
 import { Registration } from './pages/Registration/Registration.tsx';
 import { RequireAuth } from './helpers/RequireAuth.tsx';
 import Admin from './pages/Admin/Admin.tsx';
+import { Provider } from 'react-redux';
+import { store } from './store/store.ts';
 
 const Menu = lazy(() => import('./pages/Menu/Menu'));
 
@@ -37,9 +39,8 @@ const router = createBrowserRouter([
                 loader: async ({ params }) => {
                     return defer({
                         data: new Promise((res, rej) => {
-                            setTimeout(() => {
-                                axios.get(`http://localhost:3001/api/${params.id}`).then(data => res(data)).catch(rej);
-                            }, 2000)
+                            axios.get(`http://localhost:3001/api/${params.id}`).then(data => res(data)).catch(rej);
+
                         })
                     });
                 }
@@ -72,6 +73,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <Provider store={store}>
+            <RouterProvider router={router} />
+        </Provider>
     </React.StrictMode >,
 )

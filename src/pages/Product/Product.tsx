@@ -1,4 +1,4 @@
-import { Await, useLoaderData } from "react-router-dom";
+import { Await, Link, useLoaderData } from "react-router-dom";
 import { ProductInt } from "../../interfaces/product.interface";
 import { Suspense } from "react";
 import style from "./Product.module.css";
@@ -11,7 +11,7 @@ import starImg from "/public/star.svg";
 const Product = () => {
     const data = useLoaderData() as { data: ProductInt };
     return (
-        <div>
+        <div className={style.main}>
             <Suspense fallback={<>Loading...</>}>
                 <Await
                     resolve={data.data}
@@ -21,7 +21,9 @@ const Product = () => {
                             <span className={style.header}>
                                 <span className={style.left}>
                                     <span className={style["back-arrow"]}>
-                                        <img src={backArrow} alt="" />
+                                        <Link to="/">
+                                            <img src={backArrow} alt="" />
+                                        </Link>
                                     </span>
                                     <h2 className={style.h2}>{data.title}</h2>
                                 </span>
