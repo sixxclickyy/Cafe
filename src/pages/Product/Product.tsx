@@ -7,8 +7,11 @@ import cartIcon from "../../../public/whiteCartIcon.svg";
 import Button from "../../components/Button/Button";
 import image from "/public/pizza.png";
 import starImg from "/public/star.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const Product = () => {
+    const items = useSelector((s: RootState) => s.cart.items);
     const data = useLoaderData() as { data: ProductInt };
     return (
         <div className={style.main}>
@@ -28,11 +31,11 @@ const Product = () => {
                                     <h2 className={style.h2}>{data.title}</h2>
                                 </span>
                                 <span className={style.btn}>
-                                    <Button className={style["bigBtn"]}>
+                                    <Button className={style["bigBtn"]} onClick={() => items.reduce((acc, i) => acc + i.count, 0)}>
                                         <img src={cartIcon} alt="" />
                                         В корзину
                                     </Button>
-                                    <Button className={style["smalBtn"]}>
+                                    <Button className={style["smalBtn"]} onClick={() => items.reduce((acc, i) => acc + i.count, 0)}>
                                         <img src={cartIcon} alt="" />
                                     </Button>
                                 </span>

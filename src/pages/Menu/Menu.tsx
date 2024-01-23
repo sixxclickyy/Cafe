@@ -3,18 +3,27 @@ import Header from "../../components/Header/Header";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import Search from "../../components/Search/Search";
 import style from './Menu.module.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { ProductInt } from "../../interfaces/product.interface";
 
 function Menu() {
     const [menuData, setMenuData] = useState<ProductInt[]>([]);
     const [error, setError] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
+    const [filter, setFilter] = useState<string>();
 
-    const getData = async () => {
+    useEffect(() => {
+        getData(filter);
+    }, [filter]);
+
+    const getData = async (name?: string) => {
         try {
             setIsLoading(true);
-            const { data } = await axios.get<ProductInt[]>('http://localhost:3001/api');
+            const { data } = await axios.get<ProductInt[]>('http://localhost:3001/api', {
+                params: {
+                    name
+                }
+            });
             setIsLoading(false);
             setMenuData(data);
         } catch (e) {
@@ -27,18 +36,18 @@ function Menu() {
         }
     }
 
-    useEffect(() => {
-        getData();
-    }, [])
+    const updateFilter = (e: ChangeEvent<HTMLInputElement>) => {
+        setFilter(e.target.value);
+    }
 
     return <div className={style.main}>
         <div className={style.container}>
             <Header>Меню</Header>
-            <Search placeholder="Введите блюдо или состав" />
+            <Search placeholder="Введите блюдо или состав" onChange={updateFilter} />
         </div>
         <span className={style['card-container']}>
             {error && <p>{error}</p>}
-            {!isLoading && menuData.map(el => (
+            {!isLoading && menuData.length > 0 && menuData.map(el => (
                 <ProductCart
                     key={el.id}
                     id={el.id}
@@ -49,6 +58,7 @@ function Menu() {
                     price={el.price} />
             ))}
             {isLoading && <p>Loading products...</p>}
+            {!isLoading && !menuData.length && <p>По вашему запросу ничего не найдено :(</p>}
         </span>
     </div>
 };

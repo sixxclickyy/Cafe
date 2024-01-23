@@ -16,7 +16,8 @@ import { RootState } from '../../store/store';
 export function Layout() {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const prof = useSelector((s: RootState) => s.user.profile)
+    const prof = useSelector((s: RootState) => s.user.profile);
+    const items = useSelector((s: RootState) => s.cart.items);
 
     useEffect(() => {
         dispatch(profile());
@@ -49,6 +50,7 @@ export function Layout() {
                     <NavLink to='/cart' className={({ isActive }) => cn(style.navItemChild, {
                         [style.active]: isActive
                     })}>Корзина</NavLink>
+                    <span className={style.count}>{items.reduce((acc, i) => acc += i.count, 0)}</span>
                 </span>
             </div>
             <div className={style.footer}>
