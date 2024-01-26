@@ -33,6 +33,7 @@ export const HiddenBurger = () => {
                     <div className={style['menu-items']}>
                         <Link to="/" onClick={handleLinkClick} className={style['li-item-a']}>Меню</Link>
                         <Link to="/cart" onClick={handleLinkClick} className={style['li-item-a']}>Корзина</Link>
+                        <Link to="/auth/login" onClick={handleLinkClick} className={style['li-item-a']}>Войти</Link>
                     </div>
                 </div>
             </div>

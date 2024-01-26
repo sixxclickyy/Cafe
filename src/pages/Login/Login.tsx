@@ -47,7 +47,7 @@ export function Login() {
 
         <div className={style.login}>
             <h1 className={style.h1}>Вход</h1>
-            <div className={style.err}>
+            <div className={loginErrorMessage ? style.err : style["hidden-err"]}>
                 {loginErrorMessage ? loginErrorMessage : null}
             </div>
             <div className={style.item}>

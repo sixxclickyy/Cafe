@@ -47,7 +47,7 @@ export function Registration() {
 
         <div className={style.login}>
             <h1 className={style.h1}>Регистрация</h1>
-            <div className={style.err}>
+            <div className={registerErrorMessage ? style.err : style["hidden-err"]}>
                 {registerErrorMessage ? registerErrorMessage : null}
             </div>
             <div className={style.item}>

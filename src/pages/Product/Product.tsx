@@ -10,7 +10,7 @@ import starImg from "/public/star.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 
-const Product = () => {
+function Product() {
     const items = useSelector((s: RootState) => s.cart.items);
     const data = useLoaderData() as { data: ProductInt };
     return (

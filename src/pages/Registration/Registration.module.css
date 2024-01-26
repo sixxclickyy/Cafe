@@ -57,3 +57,17 @@
     padding: 20px;
     border-radius: 10px;
 }
+
+.hidden-err {
+    display: none;
+}
+
+@media (max-width: 917px) {
+    .logo {
+        display: none;
+    }
+
+    .login {
+        margin-bottom: 50px;
+    }
+}
