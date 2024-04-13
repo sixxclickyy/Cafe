@@ -8,18 +8,17 @@ import Button from "../../components/Button/Button";
 import image from "/public/pizza.png";
 import starImg from "/public/star.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
-import { cartAction } from "../../store/cart.slice";
+import { addToCart } from "../../store/cart.slice";
+import { RootState } from "../../store/store";
 
 function Product() {
     const items = useSelector((s: RootState) => s.cart.items);
     const data = useLoaderData() as { data: ProductInt };
-
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch();
 
     const add = (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        dispatch(cartAction.add(id));
+        dispatch(addToCart({ productId: id, quantity: 1, userId: 8 }));
     }
 
     return (
@@ -40,11 +39,11 @@ function Product() {
                                     <h2 className={style.h2}>{data.title}</h2>
                                 </span>
                                 <span className={style.btn} onClick={(e: React.MouseEvent<HTMLButtonElement>) => add(data.id, e)}>
-                                    <Button className={style["bigBtn"]} onClick={() => items.reduce((acc, i) => acc + i.count, 0)}>
+                                    <Button className={style["bigBtn"]}>
                                         <img src={cartIcon} alt="" />
                                         В корзину
                                     </Button>
-                                    <Button className={style["smalBtn"]} onClick={() => items.reduce((acc, i) => acc + i.count, 0)}>
+                                    <Button className={style["smalBtn"]}>
                                         <img src={cartIcon} alt="" />
                                     </Button>
                                 </span>
@@ -65,7 +64,7 @@ function Product() {
                                         </span>
                                     </span>
                                     <span className={style.compound}>
-                                        <b>Состав:</b>
+                                        <b>Описание:</b>
                                         <span>{data.description}</span>
                                     </span>
                                 </span>

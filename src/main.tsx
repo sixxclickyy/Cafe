@@ -1,4 +1,4 @@
-import React, { createContext, lazy, Suspense } from 'react'
+import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client';
 import './index.css'
 import { createBrowserRouter, defer, RouterProvider } from "react-router-dom";
@@ -19,16 +19,6 @@ import { Success } from './pages/Success/Success.tsx';
 import { store } from './store/store.ts';
 
 const Menu = lazy(() => import('./pages/Menu/Menu'));
-
-//interface State {
-//    store: Store,
-//}
-
-//const store = new Store();
-
-//export const Context = createContext<State>({
-//    store,
-//})
 
 const router = createBrowserRouter([
     {
@@ -86,10 +76,12 @@ const router = createBrowserRouter([
     }
 ])
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+
+root.render(
     <React.StrictMode>
         <Provider store={store}>
             <RouterProvider router={router} />
         </Provider>
-    </React.StrictMode >,
-)
+    </React.StrictMode>
+);

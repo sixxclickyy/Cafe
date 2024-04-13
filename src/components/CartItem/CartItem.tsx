@@ -1,10 +1,10 @@
+// CartItem.tsx
 import { useDispatch } from "react-redux";
 import style from "./CartItem.module.css";
 import { CartItemProps } from "./CartItem.props";
 import krest from "/public/krest.svg";
 import { AppDispatch } from "../../store/store";
-import { cartAction } from "../../store/cart.slice";
-import pizza from "/public/pizza.png";
+import { cartActions } from "../../store/cart.slice";
 
 function CartItem(props: CartItemProps) {
     const dispatch = useDispatch<AppDispatch>();
@@ -14,15 +14,15 @@ function CartItem(props: CartItemProps) {
     }
 
     const descrease = () => {
-        dispatch(cartAction.remove(props.id))
+        dispatch(cartActions.decrease(props.id));
     };
 
     const increase = () => {
-        dispatch(cartAction.add(props.id));
+        dispatch(cartActions.increase(props.id));
     };
 
     const removeItem = () => {
-        dispatch(cartAction.delete(props.id));
+        dispatch(cartActions.deleteItem(props.count, props.id));
     };
 
     return (

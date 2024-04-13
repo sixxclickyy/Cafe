@@ -6,14 +6,14 @@ import card from '/public/group.svg';
 import star from '/public/star.svg';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store.ts';
-import { cartAction } from '../../store/cart.slice.ts';
+import { cartActions } from '../../store/cart.slice.ts';
 
 const ProductCart = ({ id, rating, title, image, price }: ProductCart) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const add = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        dispatch(cartAction.add(id))
+        dispatch(cartActions.addToCart(id))
     }
 
     return (
