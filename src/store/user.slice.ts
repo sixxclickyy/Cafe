@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loadState } from "./storage";
+import { RootState } from "./store";
 import axios, { AxiosError } from "axios";
 import { LoginResponse } from "../interfaces/auth.interface";
 import { Profile } from "../interfaces/user.interface";
-import { RootState } from "./store";
 
-export const JWT_PERSISTENT_STATE = 'userData';
+export const JWT_PERSISTENT_STATE = 'token';
+export const USER_PERSISTENT_STATE = 'user';
 
 export interface UserPersistentState {
     jwt: string | null;
@@ -16,11 +16,24 @@ export interface UserState {
     loginErrorMessage?: string;
     profile?: Profile;
     registerErrorMessage?: string;
+    email: string;
+    name: string;
 }
 
 const initialState: UserState = {
-    jwt: loadState<UserPersistentState>(JWT_PERSISTENT_STATE)?.jwt ?? null
+    jwt: localStorage.getItem(JWT_PERSISTENT_STATE),
+    email: "",
+    name: ""
 }
+
+const savedUserData = localStorage.getItem(USER_PERSISTENT_STATE);
+if (savedUserData) {
+    const { email, name } = JSON.parse(savedUserData);
+    initialState.email = email;
+    initialState.name = name;
+}
+
+axios.defaults.baseURL = 'http://localhost:3001/api';
 
 export const login = createAsyncThunk('user/login',
     async (params: { email: string, password: string }) => {
@@ -32,7 +45,7 @@ export const login = createAsyncThunk('user/login',
             return data;
         } catch (e) {
             if (e instanceof AxiosError) {
-                throw new Error(e.message)
+                throw new Error(e.response?.data.message)
             }
         }
     }
@@ -49,21 +62,41 @@ export const registration = createAsyncThunk('user/registration',
             return data;
         } catch (e) {
             if (e instanceof AxiosError) {
-                throw new Error(e.message)
+                throw new Error(e.response?.data.message)
             }
         }
     }
 )
 
-export const profile = createAsyncThunk<Profile, void, { state: RootState }>('user/profile',
-    async (_, thunkApii) => {
-        const jwt = thunkApii.getState().user.jwt;
-        const { data } = await axios.get<Profile>(`/user/profile`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`
+export const logout = createAsyncThunk('user/logout',
+    async () => {
+        try {
+            await axios.post(`/auth/logout`);
+            localStorage.removeItem(JWT_PERSISTENT_STATE);
+            localStorage.removeItem(USER_PERSISTENT_STATE);
+            return null;
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                throw new Error(e.response?.data.message)
             }
-        });
-        return data;
+        }
+    }
+)
+
+export const profile = createAsyncThunk<Profile, void, { state: RootState }>(
+    'user/profile',
+    async (_, thunkApi) => {
+        const jwt = thunkApi.getState().user.jwt;
+        try {
+            const { data } = await axios.get<Profile>(`/user/profile`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            });
+            return data;
+        } catch (error) {
+            throw error;
+        }
     }
 )
 
@@ -71,11 +104,13 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        //addJwt: (state, action: PayloadAction<string>) => {
-        //    state.jwt = action.payload;
-        //},
+        setUser: (state, action) => {
+            state.profile = action.payload;
+        },
         logOut: (state) => {
             state.jwt = null;
+            state.email = "";
+            state.name = "";
         },
         clearLoginError: (state) => {
             state.loginErrorMessage = undefined;
@@ -86,22 +121,28 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(login.fulfilled, (state, action) => {
-            if (!action.payload) {
-                return;
+            if (action.payload) {
+                state.jwt = action.payload.access_token;
+                state.email = action.payload.user.email;
+                state.name = action.payload.user.name;
+
+                localStorage.setItem(USER_PERSISTENT_STATE, JSON.stringify({
+                    email: action.payload.user.email,
+                    name: action.payload.user.name
+                }));
             }
-            state.jwt = action.payload.access_token;
         });
         builder.addCase(login.rejected, (state, action) => {
+            console.log(action.error);
             state.loginErrorMessage = action.error.message;
         });
         builder.addCase(profile.fulfilled, (state, action) => {
             state.profile = action.payload;
         });
         builder.addCase(registration.fulfilled, (state, action) => {
-            if (!action.payload) {
-                return;
+            if (action.payload) {
+                state.jwt = action.payload.access_token;
             }
-            state.jwt = action.payload.access_token;
         });
         builder.addCase(registration.rejected, (state, action) => {
             state.registerErrorMessage = action.error.message;
@@ -109,5 +150,6 @@ export const userSlice = createSlice({
     }
 });
 
+export const { setUser, logOut, clearLoginError, clearRegisterError } = userSlice.actions;
+
 export default userSlice.reducer;
-export const userAction = userSlice.actions;

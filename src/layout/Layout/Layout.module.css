@@ -60,7 +60,8 @@
 
 .navItem {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: 10px;
     cursor: pointer;
 }
 
@@ -88,6 +89,16 @@
     height: 30px;
     border-radius: 15px;
     text-align: center;
+}
+
+.ul {
+    margin: 5px 0 5px 20px;
+    cursor: pointer;
+}
+
+.arrowDown {
+    width: 35px;
+    height: 20px;
 }
 
 @media (max-width: 896px) {

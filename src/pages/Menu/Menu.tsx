@@ -1,66 +1,72 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
+import { useState, useEffect, ChangeEvent } from 'react';
 import Header from "../../components/Header/Header";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import Search from "../../components/Search/Search";
 import style from './Menu.module.css';
-import { useState, useEffect, ChangeEvent } from 'react';
 import { ProductInt } from "../../interfaces/product.interface";
 
 function Menu() {
     const [menuData, setMenuData] = useState<ProductInt[]>([]);
-    const [error, setError] = useState<string | undefined>();
-    const [isLoading, setIsLoading] = useState<Boolean>(false);
-    const [filter, setFilter] = useState<string>();
+    const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [filter, setFilter] = useState<string>('');
+
+    useEffect(() => {
+        getData();
+    }, []);
 
     useEffect(() => {
         getData(filter);
     }, [filter]);
 
-    const getData = async (name?: string) => {
+
+    const getData = async (title?: string) => {
         try {
             setIsLoading(true);
-            const { data } = await axios.get<ProductInt[]>('http://localhost:3001/api', {
-                params: {
-                    name
-                }
-            });
-            setIsLoading(false);
-            setMenuData(data);
-        } catch (e) {
-            console.error(e);
-            if (e instanceof AxiosError) {
-                setError(e.message);
+            let url = 'http://localhost:3001/api/products';
+            if (title) {
+                url = `http://localhost:3001/api/products/filter?title=${title}`;
             }
+            const { data } = await axios.get<ProductInt[]>(url);
+            setMenuData(data);
+            setError('');
+        } catch (error) {
+            setError('Ошибка загрузки данных');
+        } finally {
             setIsLoading(false);
-            return;
         }
-    }
+    };
 
-    const updateFilter = (e: ChangeEvent<HTMLInputElement>) => {
+
+    const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFilter(e.target.value);
-    }
+    };
 
-    return <div className={style.main}>
-        <div className={style.container}>
-            <Header>Меню</Header>
-            <Search placeholder="Введите блюдо или состав" onChange={updateFilter} />
+    return (
+        <div className={style.main}>
+            <div className={style.container}>
+                <Header>Каталог</Header>
+                <Search placeholder="Я ищу..." onChange={handleFilterChange} />
+            </div>
+            <div className={style['card-container']}>
+                {isLoading && <p>Loading products...</p>}
+                {error && <p>{error}</p>}
+                {!isLoading && !error && menuData.map((product) => (
+                    <ProductCart
+                        key={product.id}
+                        id={product.id}
+                        rating={product.rating}
+                        description={product.description}
+                        title={product.title}
+                        image={product.image}
+                        price={product.price}
+                    />
+                ))}
+                {!isLoading && !error && menuData.length === 0 && <p>По вашему запросу ничего не найдено</p>}
+            </div>
         </div>
-        <span className={style['card-container']}>
-            {error && <p>{error}</p>}
-            {!isLoading && menuData.length > 0 && menuData.map(el => (
-                <ProductCart
-                    key={el.id}
-                    id={el.id}
-                    rating={el.rating}
-                    description={el.description}
-                    title={el.title}
-                    image="public/pizza.png"
-                    price={el.price} />
-            ))}
-            {isLoading && <p>Loading products...</p>}
-            {!isLoading && !menuData.length && <p>По вашему запросу ничего не найдено :(</p>}
-        </span>
-    </div>
-};
+    );
+}
 
 export default Menu;

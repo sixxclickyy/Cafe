@@ -4,7 +4,7 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { FormEvent, useEffect } from "react";
-import { login, userAction } from "../../store/user.slice";
+import { login, userSlice } from "../../store/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 
@@ -26,44 +26,50 @@ export function Login() {
         if (jwt) {
             navigate('/');
         }
-    }, [jwt, navigate])
+    }, [jwt, navigate]);
 
     const sendLogin = async (email: string, password: string) => {
-        dispatch(login({ email, password }))
-    }
+        try {
+            await dispatch(login({ email, password }));
+        } catch (error) {
+            console.error('Error logging in:', error);
+        }
+    };
 
-    const submit = (e: FormEvent) => {
+    const submit = async (e: FormEvent) => {
         e.preventDefault();
-        dispatch(userAction.clearLoginError());
+        dispatch(userSlice.actions.clearLoginError());
         const target = e.target as typeof e.target & LoginForm;
         const { email, password } = target;
-        sendLogin(email.value, password.value);
-    }
+        await sendLogin(email.value, password.value);
+    };
 
-    return <form className={style.container} onSubmit={submit}>
-        <div className={style.logo}>
-            <img src={logo} alt="" />
-        </div>
+    return (
+        <form className={style.container} onSubmit={submit}>
+            <div className={style.logo}>
+                <img src={logo} alt="" />
+            </div>
 
-        <div className={style.login}>
-            <h1 className={style.h1}>Вход</h1>
-            <div className={loginErrorMessage ? style.err : style["hidden-err"]}>
-                {loginErrorMessage ? loginErrorMessage : null}
+            <div className={style.login}>
+                <h1 className={style.h1}>Вход</h1>
+                <div className={loginErrorMessage ? style.err : style["hidden-err"]}>
+                    {loginErrorMessage ? loginErrorMessage : null}
+                </div>
+                <div className={style.item}>
+                    <label htmlFor="email">Ваш Email</label>
+                    <Input placeholder="Email" id="email" name="email" />
+                </div>
+                <div className={style.item}>
+                    <label htmlFor="password">Ваш Пароль</label>
+                    <Input placeholder="Password" id="password" type="password" name="password" />
+                </div>
+                <Button appearance="big">Вход</Button>
+                <div className={style.registration}>
+                    <span>Нет аккаунта?</span>
+                    <Link to="/auth/registration" className={style.active}>Зарегистрироваться</Link>
+                    <Link to="/" className={style.active}>На главную</Link>
+                </div>
             </div>
-            <div className={style.item}>
-                <label htmlFor="email">Ваш Email</label>
-                <Input placeholder="Email" id="email" name="email" />
-            </div>
-            <div className={style.item}>
-                <label htmlFor="password">Ваш Пароль</label>
-                <Input placeholder="Password" id="password" type="password" name="password" />
-            </div>
-            <Button appearance="big">Вход</Button>
-            <div className={style.registration}>
-                <span>Нет аккаунта?</span>
-                <Link to="/auth/registration" className={style.active}>Зарегистрироваться</Link>
-                <Link to="/" className={style.active}>На главную</Link>
-            </div>
-        </div>
-    </form>
-};
+        </form>
+    );
+}

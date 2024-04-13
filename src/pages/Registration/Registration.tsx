@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FormEvent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { registration, userAction } from "../../store/user.slice";
+import { registration, userSlice } from "../../store/user.slice";
 
 export type RegisterForm = {
     email: {
@@ -27,14 +27,13 @@ export function Registration() {
 
     useEffect(() => {
         if (jwt) {
-            navigate('/');
+            navigate('/auth/login');
         }
     }, [jwt, navigate])
 
     const submit = (e: FormEvent) => {
         e.preventDefault();
-        console.log(e);
-        dispatch(userAction.clearRegisterError());
+        dispatch(userSlice.actions.clearRegisterError());
         const target = e.target as typeof e.target & RegisterForm;
         const { email, password, name } = target;
         dispatch(registration({ email: email.value, password: password.value, name: name.value }))

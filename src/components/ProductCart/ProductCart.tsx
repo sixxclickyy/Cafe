@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store.ts';
 import { cartAction } from '../../store/cart.slice.ts';
 
-const ProductCart = ({ id, rating, description, title, image = 'public/pizza.png', price }: ProductCart) => {
+const ProductCart = ({ id, rating, title, image, price }: ProductCart) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const add = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -22,7 +22,7 @@ const ProductCart = ({ id, rating, description, title, image = 'public/pizza.png
                 <div className={style.img}>
                     <img className={style.bgc} src={image} alt="" />
                     <div className={style.priceAndCart}>
-                        <span className={style.price}>{price} <span className={style.priceSymbol}>₽</span></span>
+                        <span className={style.price}>{price} <span className={style.priceSymbol}>р</span></span>
                         <button className={style.card} onClick={add}>
                             <img src={card} alt="" />
                         </button>
@@ -33,7 +33,6 @@ const ProductCart = ({ id, rating, description, title, image = 'public/pizza.png
                 </div>
                 <span className={style.description}>
                     <h4>{title}</h4>
-                    <span>{description}</span>
                 </span>
             </div>
         </Link>

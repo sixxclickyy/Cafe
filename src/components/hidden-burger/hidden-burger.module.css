@@ -41,7 +41,7 @@
 }
 
 .navbar {
-    width: 100%;
+    width: 99%;
 }
 
 .nav-container {
@@ -66,10 +66,6 @@
 
 .li-item {
     list-style: none;
-}
-
-.li-item-a:hover {
-    font-weight: bolder;
 }
 
 .nav-container {
@@ -124,6 +120,9 @@
     font-size: 1.3rem;
     font-weight: 500;
     color: white;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .logo {
@@ -132,6 +131,19 @@
     right: 15px;
     font-size: 1.2rem;
     color: #0e2431;
+}
+
+.menu-img {
+    display: flex;
+    gap: 10px;
+}
+
+.ul {
+    margin: 5px 0 0 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .nav-container input[type='checkbox']:checked ~ .menu-items {

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react'
+import React, { createContext, lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client';
 import './index.css'
 import { createBrowserRouter, defer, RouterProvider } from "react-router-dom";
@@ -15,9 +15,20 @@ import { Registration } from './pages/Registration/Registration.tsx';
 import { RequireAuth } from './helpers/RequireAuth.tsx';
 import Admin from './pages/Admin/Admin.tsx';
 import { Provider } from 'react-redux';
+import { Success } from './pages/Success/Success.tsx';
 import { store } from './store/store.ts';
 
 const Menu = lazy(() => import('./pages/Menu/Menu'));
+
+//interface State {
+//    store: Store,
+//}
+
+//const store = new Store();
+
+//export const Context = createContext<State>({
+//    store,
+//})
 
 const router = createBrowserRouter([
     {
@@ -39,7 +50,7 @@ const router = createBrowserRouter([
                 loader: async ({ params }) => {
                     return defer({
                         data: new Promise((res, rej) => {
-                            axios.get(`http://localhost:3001/api/${params.id}`).then(data => res(data)).catch(rej);
+                            axios.get(`http://localhost:3001/api/product/${params.id}`).then(data => res(data)).catch(rej);
 
                         })
                     });
@@ -48,6 +59,10 @@ const router = createBrowserRouter([
             {
                 path: '/admin',
                 element: <Admin />
+            },
+            {
+                path: '/success',
+                element: <Success />
             },
         ]
     },

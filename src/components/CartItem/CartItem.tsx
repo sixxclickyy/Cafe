@@ -28,11 +28,11 @@ function CartItem(props: CartItemProps) {
     return (
         <div className={style.product}>
             <span className={style.img}>
-                <img src={pizza} alt="img" />
+                <img src={props.image} alt="img" />
             </span>
             <span className={style["name-price"]}>
                 <span><b>{props.title}</b></span>
-                <span>{props.price} <span className={style.price}>₽</span></span>
+                <span>{props.price} <span className={style.price}>р</span></span>
             </span>
             <span className={style.count}>
                 <span className={style.minus} onClick={descrease}>-</span>

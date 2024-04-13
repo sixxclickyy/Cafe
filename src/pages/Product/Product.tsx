@@ -7,12 +7,21 @@ import cartIcon from "../../../public/whiteCartIcon.svg";
 import Button from "../../components/Button/Button";
 import image from "/public/pizza.png";
 import starImg from "/public/star.svg";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { cartAction } from "../../store/cart.slice";
 
 function Product() {
     const items = useSelector((s: RootState) => s.cart.items);
     const data = useLoaderData() as { data: ProductInt };
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    const add = (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        dispatch(cartAction.add(id));
+    }
+
     return (
         <div className={style.main}>
             <Suspense fallback={<>Loading...</>}>
@@ -30,7 +39,7 @@ function Product() {
                                     </span>
                                     <h2 className={style.h2}>{data.title}</h2>
                                 </span>
-                                <span className={style.btn}>
+                                <span className={style.btn} onClick={(e: React.MouseEvent<HTMLButtonElement>) => add(data.id, e)}>
                                     <Button className={style["bigBtn"]} onClick={() => items.reduce((acc, i) => acc + i.count, 0)}>
                                         <img src={cartIcon} alt="" />
                                         В корзину
@@ -46,7 +55,7 @@ function Product() {
                                 <span className={style.info}>
                                     <span className={style["info-item"]}>
                                         <b>Цена:</b>
-                                        <span>{data.price} ₽</span>
+                                        <span>{data.price} р</span>
                                     </span>
                                     <span className={style["info-item"]}>
                                         <b>Рейтинг:</b>

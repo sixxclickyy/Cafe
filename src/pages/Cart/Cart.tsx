@@ -8,15 +8,17 @@ import CartItem from "../../components/CartItem/CartItem";
 import { useEffect, useState } from "react";
 import { ProductInt } from "../../interfaces/product.interface";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function Cart() {
     const items = useSelector((s: RootState) => s.cart.items);
     const [cartProducts, setCartProducts] = useState<ProductInt[]>([]);
+    const jwt = useSelector((s: RootState) => s.user.jwt);
+    const nav = useNavigate();
 
     const getItem = async (id: number) => {
         try {
-            const { data } = await axios.get(`http://localhost:3001/api/${id}`);
-            console.log(data);
+            const { data } = await axios.get(`http://localhost:3001/api/product/${id}`);
             return data;
         } catch (error) {
             console.error("Ошибка при получении данных:", error);
@@ -28,11 +30,32 @@ export function Cart() {
         setCartProducts(res);
     }
 
+    const checkout = async () => {
+        await axios.post("", {
+            products: items
+        }, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        nav('/success');
+    };
+
     useEffect(() => {
         loadAllItems();
     }, [items]);
 
+    const DELIVERY_PRICE = 5;
 
+    const PRICE_FOR_FREE_DELIVERY = 50;
+
+    const SUM = items.map(i => {
+        const product = cartProducts.find(p => p.id === i.id);
+        if (!product) {
+            return 0;
+        }
+        return i.count * product.price;
+    }).reduce((acc, i) => acc += i, 0)
 
     return <div className={style.container}>
         <Header>Корзина</Header>
@@ -56,23 +79,26 @@ export function Cart() {
                 <span className={style.item}>
                     <span className={style.i}>Итог</span>
                     <span className={style.i}>
-                        100 <span className={style["gray-price"]}>₽</span>
+                        {SUM} <span className={style["gray-price"]}>р</span>
                     </span>
                 </span>
                 <span className={style.item}>
                     <span className={style.i}>Доставка</span>
                     <span className={style.i}>
-                        20 <span className={style["gray-price"]}>₽</span>
+                        {
+                            SUM > PRICE_FOR_FREE_DELIVERY ? <>Бесплатно</> : DELIVERY_PRICE
+                        } <span className={style["gray-price"]}>р</span>
                     </span>
                 </span>
                 <span className={style.item}>
                     <span className={style.i}>Итог</span>
                     <span className={style.i}>
-                        120 <span className={style["gray-price"]}>₽</span>
+                        {SUM + DELIVERY_PRICE}
+                        <span className={style["gray-price"]}> р</span>
                     </span>
                 </span>
             </span>
         </div>
-        <Button appearance="big">Оформить</Button>
+        <Button appearance="big" onClick={checkout}>Оформить</Button>
     </div>
 };
