@@ -20,16 +20,6 @@ import { store } from './store/store.ts';
 
 const Menu = lazy(() => import('./pages/Menu/Menu'));
 
-//interface State {
-//    store: Store,
-//}
-
-//const store = new Store();
-
-//export const Context = createContext<State>({
-//    store,
-//})
-
 const router = createBrowserRouter([
     {
         path: '/',
@@ -50,7 +40,7 @@ const router = createBrowserRouter([
                 loader: async ({ params }) => {
                     return defer({
                         data: new Promise((res, rej) => {
-                            axios.get(`http://localhost:3001/api/product/${params.id}`).then(data => res(data)).catch(rej);
+                            axios.get(`/product/${params.id}`).then(data => res(data)).catch(rej);
 
                         })
                     });

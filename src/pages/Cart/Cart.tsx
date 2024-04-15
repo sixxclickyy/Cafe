@@ -6,33 +6,25 @@ import style from "./Cart.module.css";
 import { RootState } from "../../store/store";
 import CartItem from "../../components/CartItem/CartItem";
 import { useEffect, useState } from "react";
-import { ProductInt } from "../../interfaces/product.interface";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { userID } from "../../store/cart.slice";
 
 export function Cart() {
-    const items = useSelector((s: RootState) => s.cart.items);
-    const [cartProducts, setCartProducts] = useState<ProductInt[]>([]);
+    const [cartItems, setCartItems] = useState([]);
     const jwt = useSelector((s: RootState) => s.user.jwt);
     const nav = useNavigate();
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const getItem = async (id: number) => {
-        try {
-            const { data } = await axios.get(`http://localhost:3001/api/product/${id}`);
-            return data;
-        } catch (error) {
-            console.error("Ошибка при получении данных:", error);
-        }
-    }
-
-    const loadAllItems = async () => {
-        const res = await Promise.all(items.map(i => getItem(i.id)));
-        setCartProducts(res);
-    }
+    useEffect(() => {
+        getData();
+        //location.reload();
+    }, [userID]);
 
     const checkout = async () => {
         await axios.post("", {
-            products: items
+            products: cartItems.map(item => ({ id: item.product.id, quantity: item.quantity }))
         }, {
             headers: {
                 Authorization: `Bearer ${jwt}`
@@ -41,64 +33,67 @@ export function Cart() {
         nav('/success');
     };
 
-    useEffect(() => {
-        loadAllItems();
-    }, [items]);
+    const getData = async () => {
+        try {
+            setIsLoading(true);
+            const { data } = await axios.get(`/cart/${userID}`);
+            console.log(data)
+            setCartItems(data);
+            setError('');
+        } catch (error) {
+            setError('Ошибка загрузки данных');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const DELIVERY_PRICE = 5;
-
     const PRICE_FOR_FREE_DELIVERY = 50;
 
-    const SUM = items.map(i => {
-        const product = cartProducts.find(p => p.id === i.id);
-        if (!product) {
-            return 0;
-        }
-        return i.count * product.price;
-    }).reduce((acc, i) => acc += i, 0)
+    const totalSum = cartItems.reduce((acc, item) => acc + item.quantity * item.product.price, 0);
+    const deliveryCost = totalSum > PRICE_FOR_FREE_DELIVERY ? 0 : DELIVERY_PRICE;
+    const totalPrice = totalSum + deliveryCost;
 
-    return <div className={style.container}>
-        <Header>Корзина</Header>
-        <div className={style.products}>
-            {items.map(i => {
-                const product = cartProducts.find(p => p.id === i.id)
-                if (!product) {
-                    return
-                }
-                return <CartItem key={product.id} count={i.count} {...product} />
-            })}
+    return (
+        <div className={style.container}>
+            <Header>Корзина</Header>
+            <div className={style.products}>
+                {isLoading && <p>Loading products...</p>}
+                {error && <p>{error}</p>}
+                {!isLoading && !error && cartItems.map((item) => (
+                    <CartItem key={item.id} count={item.quantity} {...item.product} />
+                ))}
+                {!isLoading && !error && cartItems.length === 0 && <p>Корзина пока пуста :)</p>}
+            </div>
+            <div className={style.info}>
+                <span className={style["container-promo"]}>
+                    <span className={style.promo}>
+                        <Input placeholder="Промокод" className={style.input} />
+                        <Button className={style.btn}>Применить</Button>
+                    </span>
+                </span>
+                <span className={style["finish-price"]}>
+                    <span className={style.item}>
+                        <span className={style.i}>Итог</span>
+                        <span className={style.i}>
+                            {totalSum} <span className={style["gray-price"]}>р</span>
+                        </span>
+                    </span>
+                    <span className={style.item}>
+                        <span className={style.i}>Доставка</span>
+                        <span className={style.i}>
+                            {deliveryCost === 0 ? "Бесплатно" : `${deliveryCost} р`} <span className={style["gray-price"]}>р</span>
+                        </span>
+                    </span>
+                    <span className={style.item}>
+                        <span className={style.i}>Итог</span>
+                        <span className={style.i}>
+                            {totalPrice} <span className={style["gray-price"]}>р</span>
+                        </span>
+                    </span>
+                </span>
+            </div>
+            <Button appearance="big" onClick={checkout}>Оформить</Button>
         </div>
-        <div className={style.info}>
-            <span className={style["container-promo"]}>
-                <span className={style.promo}>
-                    <Input placeholder="Промокод" className={style.input} />
-                    <Button className={style.btn}>Применить</Button>
-                </span>
-            </span>
-            <span className={style["finish-price"]}>
-                <span className={style.item}>
-                    <span className={style.i}>Итог</span>
-                    <span className={style.i}>
-                        {SUM} <span className={style["gray-price"]}>р</span>
-                    </span>
-                </span>
-                <span className={style.item}>
-                    <span className={style.i}>Доставка</span>
-                    <span className={style.i}>
-                        {
-                            SUM > PRICE_FOR_FREE_DELIVERY ? <>Бесплатно</> : DELIVERY_PRICE
-                        } <span className={style["gray-price"]}>р</span>
-                    </span>
-                </span>
-                <span className={style.item}>
-                    <span className={style.i}>Итог</span>
-                    <span className={style.i}>
-                        {SUM + DELIVERY_PRICE}
-                        <span className={style["gray-price"]}> р</span>
-                    </span>
-                </span>
-            </span>
-        </div>
-        <Button appearance="big" onClick={checkout}>Оформить</Button>
-    </div>
-};
+    );
+}

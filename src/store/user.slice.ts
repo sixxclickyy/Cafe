@@ -18,12 +18,14 @@ export interface UserState {
     registerErrorMessage?: string;
     email: string;
     name: string;
+    userId: number | undefined;
 }
 
 const initialState: UserState = {
     jwt: localStorage.getItem(JWT_PERSISTENT_STATE),
     email: "",
-    name: ""
+    name: "",
+    userId: undefined
 }
 
 const savedUserData = localStorage.getItem(USER_PERSISTENT_STATE);
@@ -111,6 +113,7 @@ export const userSlice = createSlice({
             state.jwt = null;
             state.email = "";
             state.name = "";
+            state.userId = undefined
         },
         clearLoginError: (state) => {
             state.loginErrorMessage = undefined;
@@ -125,10 +128,12 @@ export const userSlice = createSlice({
                 state.jwt = action.payload.access_token;
                 state.email = action.payload.user.email;
                 state.name = action.payload.user.name;
+                state.userId = action.payload.user.id
 
                 localStorage.setItem(USER_PERSISTENT_STATE, JSON.stringify({
+                    userId: action.payload.user.id,
                     email: action.payload.user.email,
-                    name: action.payload.user.name
+                    name: action.payload.user.name,
                 }));
             }
         });

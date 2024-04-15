@@ -8,9 +8,9 @@ import { ProductInt } from "../../interfaces/product.interface";
 
 function Menu() {
     const [menuData, setMenuData] = useState<ProductInt[]>([]);
+    const [filter, setFilter] = useState<string>('');
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [filter, setFilter] = useState<string>('');
 
     useEffect(() => {
         getData();
@@ -24,9 +24,9 @@ function Menu() {
     const getData = async (title?: string) => {
         try {
             setIsLoading(true);
-            let url = 'http://localhost:3001/api/products';
+            let url = '/products';
             if (title) {
-                url = `http://localhost:3001/api/products/filter?title=${title}`;
+                url = `/products/filter?title=${title}`;
             }
             const { data } = await axios.get<ProductInt[]>(url);
             setMenuData(data);

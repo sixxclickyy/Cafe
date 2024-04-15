@@ -21,7 +21,6 @@ export function Layout() {
 
     const items = useSelector((s: RootState) => s.cart.items);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (email && name) {
