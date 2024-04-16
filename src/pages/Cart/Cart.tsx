@@ -19,8 +19,7 @@ export function Cart() {
 
     useEffect(() => {
         getData();
-        //location.reload();
-    }, [userID]);
+    }, []);
 
     const checkout = async () => {
         await axios.post("", {
@@ -38,6 +37,7 @@ export function Cart() {
             setIsLoading(true);
             const { data } = await axios.get(`/cart/${userID}`);
             console.log(data)
+
             setCartItems(data);
             setError('');
         } catch (error) {

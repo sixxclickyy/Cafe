@@ -25,6 +25,7 @@ export function Login() {
     useEffect(() => {
         if (jwt) {
             navigate('/');
+            location.reload();
         }
     }, [jwt, navigate]);
 
