@@ -1,4 +1,4 @@
-import React, { createContext, lazy, Suspense } from 'react'
+import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client';
 import './index.css'
 import { createBrowserRouter, defer, RouterProvider } from "react-router-dom";
@@ -39,16 +39,9 @@ const router = createBrowserRouter([
                 errorElement: <>Error!!!</>,
                 loader: async ({ params }) => {
                     return defer({
-                        data: new Promise((res, rej) => {
-                            axios.get(`/product/${params.id}`).then(data => res(data)).catch(rej);
-
-                        })
+                        data: axios.get(`/product/${params.id}`)
                     });
                 }
-            },
-            {
-                path: '/admin',
-                element: <Admin />
             },
             {
                 path: '/success',
@@ -69,6 +62,10 @@ const router = createBrowserRouter([
                 element: <Registration />
             }
         ]
+    },
+    {
+        path: '/admin',
+        element: <Admin />
     },
     {
         path: '*',

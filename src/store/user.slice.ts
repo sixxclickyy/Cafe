@@ -70,20 +70,20 @@ export const registration = createAsyncThunk('user/registration',
     }
 )
 
-export const logout = createAsyncThunk('user/logout',
-    async () => {
-        try {
-            await axios.post(`/auth/logout`);
-            localStorage.removeItem(JWT_PERSISTENT_STATE);
-            localStorage.removeItem(USER_PERSISTENT_STATE);
-            return null;
-        } catch (e) {
-            if (e instanceof AxiosError) {
-                throw new Error(e.response?.data.message)
-            }
-        }
-    }
-)
+//export const logout = createAsyncThunk('user/logout',
+//    async () => {
+//        try {
+//            await axios.post(`/auth/logout`);
+//            localStorage.removeItem(JWT_PERSISTENT_STATE);
+//            localStorage.removeItem(USER_PERSISTENT_STATE);
+//            return null;
+//        } catch (e) {
+//            if (e instanceof AxiosError) {
+//                throw new Error(e.response?.data.message)
+//            }
+//        }
+//    }
+//)
 
 export const profile = createAsyncThunk<Profile, void, { state: RootState }>(
     'user/profile',
@@ -113,7 +113,8 @@ export const userSlice = createSlice({
             state.jwt = null;
             state.email = "";
             state.name = "";
-            state.userId = undefined
+            state.userId = undefined;
+            localStorage.removeItem(USER_PERSISTENT_STATE);
         },
         clearLoginError: (state) => {
             state.loginErrorMessage = undefined;
@@ -146,7 +147,17 @@ export const userSlice = createSlice({
         });
         builder.addCase(registration.fulfilled, (state, action) => {
             if (action.payload) {
+                console.log(action.payload)
                 state.jwt = action.payload.access_token;
+                state.email = action.payload.user.email;
+                state.name = action.payload.user.name;
+                state.userId = action.payload.user.id;
+
+                localStorage.setItem(USER_PERSISTENT_STATE, JSON.stringify({
+                    userId: action.payload.user.id,
+                    email: action.payload.user.email,
+                    name: action.payload.user.name,
+                }));
             }
         });
         builder.addCase(registration.rejected, (state, action) => {

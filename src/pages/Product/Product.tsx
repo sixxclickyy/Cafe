@@ -9,7 +9,7 @@ import image from "/public/pizza.png";
 import starImg from "/public/star.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { cartAction } from "../../store/cart.slice";
+import { addProduct } from "../../store/cart.slice";
 
 function Product() {
     const items = useSelector((s: RootState) => s.cart.items);
@@ -19,8 +19,10 @@ function Product() {
 
     const add = (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        dispatch(cartAction.add(id));
+        dispatch(addProduct({ productId: id }));
     }
+
+    const URL = "http://localhost:3001";
 
     return (
         <div className={style.main}>
@@ -51,7 +53,7 @@ function Product() {
                             </span>
 
                             <div className={style["info-container"]}>
-                                {data.image ? <img src={data.image} alt="img" className={style.img} /> : <img src={image} alt="img" className={style.img} />}
+                                {URL + data.image ? <img src={URL + data.image} alt="img" className={style.img} /> : <img src={URL + image} alt="img" className={style.img} />}
                                 <span className={style.info}>
                                     <span className={style["info-item"]}>
                                         <b>Цена:</b>

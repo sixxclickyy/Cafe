@@ -27,7 +27,7 @@ export function Registration() {
 
     useEffect(() => {
         if (jwt) {
-            navigate('/auth/login');
+            navigate('/');
         }
     }, [jwt, navigate])
 
@@ -61,7 +61,7 @@ export function Registration() {
                 <label htmlFor="name">Ваше имя</label>
                 <Input placeholder="name" id="name" name="name" />
             </div>
-            <Button appearance="big">Вход</Button>
+            <Button appearance="big">Зарегистрироваться</Button>
             <div className={style.registration}>
                 <span>Уже есть аккаунт?</span>
                 <Link to="/auth/login" className={style.active}>Войти</Link>

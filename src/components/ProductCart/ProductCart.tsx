@@ -1,29 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import style from './ProductCart.module.css';
-import { ProductCart } from './ProductCart.props.ts';
+import { ProductCartIInterface } from './ProductCart.props.ts';
 import card from '/public/group.svg';
 import star from '/public/star.svg';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store.ts';
-import { cartAction } from '../../store/cart.slice.ts';
+import { addProduct } from '../../store/cart.slice.ts';
 
-const ProductCart = ({ id, rating, title, image, price }: ProductCart) => {
+const ProductCart = ({ id, rating, title, image, price }: ProductCartIInterface) => {
     const dispatch = useDispatch<AppDispatch>();
 
-    const add = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const add = (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        dispatch(cartAction.add(id))
+        dispatch(addProduct({ productId: id }));
     }
 
     return (
         <Link to={`/product/${id}`} className={style.link}>
             <div className={style.container}>
                 <div className={style.img}>
-                    <img className={style.bgc} src={image} alt="" />
+                    <img className={style.bgc} src={"http://localhost:3001" + image} alt="" />
                     <div className={style.priceAndCart}>
                         <span className={style.price}>{price} <span className={style.priceSymbol}>р</span></span>
-                        <button className={style.card} onClick={add}>
+                        <button className={style.card} onClick={(e: React.MouseEvent<HTMLButtonElement>) => add(id, e)}>
                             <img src={card} alt="" />
                         </button>
                     </div>

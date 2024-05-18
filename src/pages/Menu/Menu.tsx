@@ -1,34 +1,50 @@
-import axios from 'axios';
 import { useState, useEffect, ChangeEvent } from 'react';
 import Header from "../../components/Header/Header";
 import ProductCart from "../../components/ProductCart/ProductCart";
 import Search from "../../components/Search/Search";
 import style from './Menu.module.css';
 import { ProductInt } from "../../interfaces/product.interface";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { getProducts } from '../../store/product.slice';
 
 function Menu() {
     const [menuData, setMenuData] = useState<ProductInt[]>([]);
     const [filter, setFilter] = useState<string>('');
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const dispatch = useDispatch<AppDispatch>();
+    const { categoryProducts } = useSelector((s: RootState) => s.product);
 
     useEffect(() => {
-        getData();
-    }, []);
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                await getData();
+                setIsLoading(false);
+            } catch (error) {
+                setError('Ошибка загрузки данных');
+                setIsLoading(false);
+            }
+        };
+
+        if (categoryProducts.length > 0) {
+            setMenuData(categoryProducts);
+        } else {
+            fetchData();
+        }
+    }, [categoryProducts]);
+
 
     useEffect(() => {
         getData(filter);
     }, [filter]);
 
-
     const getData = async (title?: string) => {
         try {
             setIsLoading(true);
-            let url = '/products';
-            if (title) {
-                url = `/products/filter?title=${title}`;
-            }
-            const { data } = await axios.get<ProductInt[]>(url);
+            const action = await dispatch(getProducts({ title }));
+            const data = action.payload;
             setMenuData(data);
             setError('');
         } catch (error) {
@@ -37,7 +53,6 @@ function Menu() {
             setIsLoading(false);
         }
     };
-
 
     const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFilter(e.target.value);

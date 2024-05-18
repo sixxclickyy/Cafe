@@ -13,20 +13,23 @@ import { logOut } from '../../store/user.slice';
 import { RootState } from '../../store/store';
 import arrowDown from "/public/arrowDown.png";
 import { useEffect, useState } from 'react';
+import { getCategoryProducts } from '../../store/product.slice';
+import { getUserProducts } from '../../store/cart.slice';
 
 export function Layout() {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const { email, name } = useSelector((s: RootState) => s.user);
+    const { count } = useSelector((s: RootState) => s.cart);
 
     const items = useSelector((s: RootState) => s.cart.items);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         if (email && name) {
-
+            dispatch(getUserProducts());
         }
-    }, []);
+    }, [email, name, dispatch]);
 
     const handleLogout = () => {
         dispatch(logOut());
@@ -35,6 +38,14 @@ export function Layout() {
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleBrandFilter = async (brand: string) => {
+        try {
+            await dispatch(getCategoryProducts({ brand }));
+        } catch (error) {
+            console.error('Ошибка при фильтрации по бренду:', error);
+        }
     };
 
     return (
@@ -49,20 +60,20 @@ export function Layout() {
                     </span>
                 </div>
                 <div className={style.nav}>
-                    <span onClick={toggleMenu}>
+                    <span>
                         <span className={style.navItem}>
                             <img src={menu} alt="" />
                             <NavLink to='/' className={({ isActive }) => cn(style.navItemChild, {
                                 [style.active]: isActive
                             })}>Каталог</NavLink>
-                            <img src={arrowDown} alt="" className={style.arrowDown} />
+                            <img src={arrowDown} alt="" className={style.arrowDown} onClick={toggleMenu} />
                         </span>
                         <span>
                             {isMenuOpen && (
                                 <ul className={style.ul}>
-                                    <li>Apple</li>
-                                    <li>Sumsung</li>
-                                    <li>Xiomi</li>
+                                    <li onClick={() => handleBrandFilter('Apple')}>Apple</li>
+                                    <li onClick={() => handleBrandFilter('Samsung')}>Samsung</li>
+                                    <li onClick={() => handleBrandFilter('Xiaomi')}>Xiaomi</li>
                                 </ul>
                             )}
                         </span>
@@ -72,15 +83,15 @@ export function Layout() {
                         <NavLink to='/cart' className={({ isActive }) => cn(style.navItemChild, {
                             [style.active]: isActive
                         })}>Корзина</NavLink>
-                        <span className={style.count}>{items.reduce((acc, i) => acc += i.count, 0)}</span>
+                        <span className={style.count}>{count}</span>
                     </span>
-                </div>
-                <div className={style.footer}>
-                    <div className={style.btn}>
-                        <Button onClick={handleLogout}>
-                            <img src={exit} alt="" />
-                            Выйти
-                        </Button>
+                    <div className={style.footer}>
+                        <div className={style.btn}>
+                            <Button onClick={handleLogout}>
+                                <img src={exit} alt="" />
+                                Выйти
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

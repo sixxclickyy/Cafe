@@ -1,25 +1,33 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../components/Button/Button";
 import Header from "../../components/Header/Header";
 import Input from "../../components/Input/Input";
 import style from "./Cart.module.css";
-import { RootState } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import CartItem from "../../components/CartItem/CartItem";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { userID } from "../../store/cart.slice";
+import { getUserProducts } from "../../store/cart.slice";
+import { CartItemInterface } from "../../interfaces/cartItem.interface";
 
 export function Cart() {
-    const [cartItems, setCartItems] = useState([]);
+    const [cartItems, setCartItems] = useState<CartItemInterface[]>([]);
     const jwt = useSelector((s: RootState) => s.user.jwt);
     const nav = useNavigate();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch<AppDispatch>();
+    const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
-        getData();
-    }, []);
+        if (!dataLoaded) {
+            getData();
+            setDataLoaded(true);
+        }
+    }, [cartItems]);
+
+
 
     const checkout = async () => {
         await axios.post("", {
@@ -35,10 +43,12 @@ export function Cart() {
     const getData = async () => {
         try {
             setIsLoading(true);
-            const { data } = await axios.get(`/cart/${userID}`);
-            console.log(data)
-
-            setCartItems(data);
+            const actionResult = await dispatch(getUserProducts());
+            const data = actionResult.payload.cartItems;
+            if (Array.isArray(data)) {
+                //console.log(data)
+                setCartItems(data);
+            }
             setError('');
         } catch (error) {
             setError('Ошибка загрузки данных');
@@ -46,6 +56,7 @@ export function Cart() {
             setIsLoading(false);
         }
     };
+
 
     const DELIVERY_PRICE = 5;
     const PRICE_FOR_FREE_DELIVERY = 50;
