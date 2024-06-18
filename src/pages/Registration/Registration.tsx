@@ -3,7 +3,7 @@ import style from "./Registration.module.css";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { FormEvent, useEffect } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { registration, userSlice } from "../../store/user.slice";
@@ -17,17 +17,22 @@ export type RegisterForm = {
     };
     name: {
         value: string;
+    };
+    sex: {
+        value: string;
     }
 }
 
 export function Registration() {
     const dispatch = useDispatch<AppDispatch>();
     const { jwt, registerErrorMessage } = useSelector((s: RootState) => s.user);
+    const [gender, setGender] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
         if (jwt) {
             navigate('/');
+            location.reload();
         }
     }, [jwt, navigate])
 
@@ -36,16 +41,20 @@ export function Registration() {
         dispatch(userSlice.actions.clearRegisterError());
         const target = e.target as typeof e.target & RegisterForm;
         const { email, password, name } = target;
-        dispatch(registration({ email: email.value, password: password.value, name: name.value }))
+        dispatch(registration({ email: email.value, password: password.value, name: name.value, sex: gender }))
 
     }
+
+    const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setGender(e.target.value);
+    }
+
     return <form className={style.container} onSubmit={submit}>
         <div className={style.logo}>
             <img src={logo} alt="" />
         </div>
 
         <div className={style.login}>
-            <h1 className={style.h1}>Регистрация</h1>
             <div className={registerErrorMessage ? style.err : style["hidden-err"]}>
                 {registerErrorMessage ? registerErrorMessage : null}
             </div>
@@ -60,6 +69,17 @@ export function Registration() {
             <div className={style.item}>
                 <label htmlFor="name">Ваше имя</label>
                 <Input placeholder="name" id="name" name="name" />
+            </div>
+            <div className={style.sex}>
+                <label htmlFor="gender">Ваш пол</label>
+                <div>
+                    <input type="radio" id="male" name="gender" value="m" checked={gender === "m"} onChange={handleGenderChange} />
+                    <label htmlFor="male">Мужчина</label>
+                </div>
+                <div>
+                    <input type="radio" id="female" name="gender" value="f" checked={gender === "f"} onChange={handleGenderChange} />
+                    <label htmlFor="female">Женщина</label>
+                </div>
             </div>
             <Button appearance="big">Зарегистрироваться</Button>
             <div className={style.registration}>

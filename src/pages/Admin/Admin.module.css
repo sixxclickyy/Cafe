@@ -1,6 +1,13 @@
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px;
+}
+
 .container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 20px;
     padding: 40px;
 }
@@ -13,12 +20,13 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 40%;
+    width: 100%;
 }
 
 .item label {
-    font-size: 16px;
-    min-width: 200px;
+    color: #c4c4c4;
+    align-self: flex-start;
+    font-size: 18px;
 }
 
 .item {
@@ -29,4 +37,36 @@
 .form {
     display: flex;
     justify-content: center;
+}
+
+.input {
+    min-width: 280px;
+    min-height: 23px;
+    height: auto !important;
+    display: inline-block;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    box-shadow: 15px 20px 45px 0px rgba(233, 233, 233, 0.25);
+    outline: none;
+    font-size: var(--font-size);
+    padding: 22px;
+}
+
+.table thead tr th,
+.table tbody tr td {
+    padding: 10px;
+    text-align: center;
+}
+
+.post {
+    text-align: start;
+}
+
+.exit {
+    text-decoration: none;
+}
+
+::-webkit-input-placeholder {
+    color: #c4c4c4;
+    font-size: 18px;
 }

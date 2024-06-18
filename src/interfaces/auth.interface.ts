@@ -6,4 +6,5 @@ export interface LoginResponse {
     user: Profile;
     name: string;
     email: string;
+    isAdmin: boolean;
 }

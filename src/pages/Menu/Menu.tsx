@@ -35,7 +35,6 @@ function Menu() {
         }
     }, [categoryProducts]);
 
-
     useEffect(() => {
         getData(filter);
     }, [filter]);
@@ -78,7 +77,7 @@ function Menu() {
                         price={product.price}
                     />
                 ))}
-                {!isLoading && !error && menuData.length === 0 && <p>По вашему запросу ничего не найдено</p>}
+                {!isLoading && !error && menuData.length === 0 && <p>К сожалению, ничего не найдено</p>}
             </div>
         </div>
     );

@@ -15,6 +15,16 @@
 }
 
 .img {
-    transform: rotate(-17.057deg);
     flex-shrink: 0;
+    max-width: 300px;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.h3 {
+    border: 3px solid var(--primary-color);
+    padding: 30px;
+    border-radius: 10px;
 }

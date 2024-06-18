@@ -62,12 +62,22 @@
     display: none;
 }
 
+.sex {
+    width: 305px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    box-shadow: 15px 20px 45px 0px rgba(233, 233, 233, 0.25);
+    padding: 10px;
+}
+
 @media (max-width: 917px) {
     .logo {
         display: none;
     }
 
-    .login {
-        margin-bottom: 50px;
+    .container {
+        height: 100vh;
+        display: flex;
+        align-items: center;
     }
 }

@@ -5,7 +5,6 @@ import style from "./Product.module.css";
 import backArrow from "../../../public/svg/backArrow.svg";
 import cartIcon from "../../../public/whiteCartIcon.svg";
 import Button from "../../components/Button/Button";
-import image from "/public/pizza.png";
 import starImg from "/public/star.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
@@ -53,7 +52,7 @@ function Product() {
                             </span>
 
                             <div className={style["info-container"]}>
-                                {URL + data.image ? <img src={URL + data.image} alt="img" className={style.img} /> : <img src={URL + image} alt="img" className={style.img} />}
+                                {URL + data.image ? <img src={URL + data.image} alt="img" className={style.img} /> : <img src={""} alt="img" className={style.img} />}
                                 <span className={style.info}>
                                     <span className={style["info-item"]}>
                                         <b>Цена:</b>
@@ -67,7 +66,7 @@ function Product() {
                                         </span>
                                     </span>
                                     <span className={style.compound}>
-                                        <b>Состав:</b>
+                                        <b>Характеристики:</b>
                                         <span>{data.description}</span>
                                     </span>
                                 </span>

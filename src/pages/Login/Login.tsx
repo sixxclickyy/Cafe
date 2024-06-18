@@ -19,15 +19,18 @@ export type LoginForm = {
 
 export function Login() {
     const dispatch = useDispatch<AppDispatch>();
-    const { jwt, loginErrorMessage } = useSelector((s: RootState) => s.user);
+    const { jwt, loginErrorMessage, isAdmin } = useSelector((s: RootState) => s.user);
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (isAdmin) {
+            navigate('/admin');
+        }
         if (jwt) {
             navigate('/');
             location.reload();
         }
-    }, [jwt, navigate]);
+    }, [jwt, navigate, isAdmin]);
 
     const sendLogin = async (email: string, password: string) => {
         try {
@@ -52,7 +55,6 @@ export function Login() {
             </div>
 
             <div className={style.login}>
-                <h1 className={style.h1}>Вход</h1>
                 <div className={loginErrorMessage ? style.err : style["hidden-err"]}>
                     {loginErrorMessage ? loginErrorMessage : null}
                 </div>

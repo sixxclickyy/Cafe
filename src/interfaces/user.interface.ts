@@ -3,5 +3,5 @@ export interface Profile {
     email: string,
     //address: string,
     name: string,
-    //phone: string
+    sex: string
 }

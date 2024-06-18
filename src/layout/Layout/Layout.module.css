@@ -2,7 +2,7 @@
 
 .container {
     display: flex;
-    min-height: 1400px;
+    /*height: 100vh;*/
 }
 
 .right {
@@ -43,13 +43,12 @@
     height: 43px;
     flex-shrink: 0;
     border-radius: 28.5px;
-    background: #fe724c;
-    box-shadow: 0px 10px 30px 0px rgba(254, 114, 76, 0.2);
     color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
+    padding-top: 30px;
 }
 
 .nav {
@@ -91,14 +90,118 @@
     text-align: center;
 }
 
-.ul {
-    margin: 5px 0 5px 20px;
+.beads {
+    list-style: none;
+    background: #eee3db;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 80%;
     cursor: pointer;
+    /*opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;*/
+}
+
+.beadsVisible {
+    opacity: 1;
+    max-height: 500px;
+}
+
+.beads span {
+    text-transform: uppercase;
+    line-height: 40px;
+    border-bottom: 1px solid #d4d7d6;
+    position: relative;
+}
+
+.beads span:hover {
+    background: #e5c1ec;
+    transition: 0.5s linear;
+}
+
+.beads a {
+    text-decoration: none;
+    color: #464643;
+    display: block;
+    line-height: 40px;
+    position: relative;
+}
+.beads a:before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #a58063;
+}
+.beads span li:last-child {
+    border-bottom: none;
+}
+.beads span li:before,
+.beads span li:after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+}
+.beads span li:before {
+    top: calc(50% - 5px);
+    background: #e0926e;
+    left: -22px;
+    width: 10px;
+    height: 10px;
+    transition: 0.5s linear;
+}
+.beads span li:after {
+    bottom: 6px;
+    left: -20px;
+    width: 6px;
+    height: 6px;
+    background: #a58063;
+}
+.beads span li:hover:before {
+    background: #ffce08;
 }
 
 .arrowDown {
     width: 35px;
     height: 20px;
+}
+
+.woman {
+    width: 100px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.footer {
+    align-self: stretch;
+    background: linear-gradient(21deg, #dd03e4, var(--primary-color));
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.auth {
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+}
+
+.phone {
+    width: 18px;
+    height: 23px;
+}
+
+.order {
+    width: 23px;
+    height: 23px;
 }
 
 @media (max-width: 896px) {

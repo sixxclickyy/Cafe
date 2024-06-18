@@ -17,6 +17,8 @@ import Admin from './pages/Admin/Admin.tsx';
 import { Provider } from 'react-redux';
 import { Success } from './pages/Success/Success.tsx';
 import { store } from './store/store.ts';
+import { Orders } from './pages/Orders/Orders.tsx';
+import { Contacts } from './pages/Contacts/Contacts.tsx';
 
 const Menu = lazy(() => import('./pages/Menu/Menu'));
 
@@ -46,6 +48,14 @@ const router = createBrowserRouter([
             {
                 path: '/success',
                 element: <Success />
+            },
+            {
+                path: '/orders',
+                element: <RequireAuth><Orders /></RequireAuth>
+            },
+            {
+                path: '/contacts',
+                element: <RequireAuth><Contacts /></RequireAuth>
             },
         ]
     },

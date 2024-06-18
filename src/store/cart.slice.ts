@@ -13,6 +13,22 @@ function getUserIdFromLocalStorage(): number | undefined {
     return undefined;
 }
 
+function getUserEmailFromLocalStorage(): number | undefined {
+    const userData = localStorage.getItem(USER_PERSISTENT_STATE);
+    if (userData) {
+        const { email } = JSON.parse(userData);
+        return email;
+    }
+    return undefined;
+}
+
+export interface OrderItem {
+    productId: number;
+    quantity: number;
+    number: string;
+    price: number;
+}
+
 export const userID = getUserIdFromLocalStorage()
 
 export const CART_PERSISTENT_STATE = 'cartData';
@@ -28,6 +44,7 @@ export interface CartState {
     items: CartItem[];
     count: number;
     addProductErrorMessage?: string;
+    orderMessage?: string;
 }
 
 const initialState: CartState = loadState<CartState>(CART_PERSISTENT_STATE) ?? {
@@ -113,6 +130,26 @@ export const increaseProduct = createAsyncThunk('cart/increase',
     }
 )
 
+export const order = createAsyncThunk('/orders',
+    async (params: OrderItem) => {
+        try {
+            const { data } = await axios.post(`/orders`, {
+                userEmail: getUserEmailFromLocalStorage(),
+                number: params.number,
+                productId: params.productId,
+                quantity: params.quantity,
+                price: params.price,
+                userId: getUserIdFromLocalStorage()
+            });
+            return data;
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                throw new Error(e.response?.data.message)
+            }
+        }
+    }
+)
+
 export const cartSlice = createSlice({
     name: 'cart',
     initialState,
@@ -157,10 +194,16 @@ export const cartSlice = createSlice({
             console.log(action.error);
             state.addProductErrorMessage = action.error.message;
         });
-        builder.addCase(increaseProduct.fulfilled, (state, action) => {
-        });
         builder.addCase(logOut, (state) => {
             state.count = 0;
+        });
+        builder.addCase(order.fulfilled, (state, action) => {
+            state.orderMessage = action.payload.message;
+            state.count = 0;
+        });
+        builder.addCase(order.rejected, (state, action) => {
+            console.log(action.error);
+            state.orderMessage = action.error.message;
         });
     }
 });

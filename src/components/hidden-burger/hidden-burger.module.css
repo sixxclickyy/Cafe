@@ -60,7 +60,7 @@
 .li-item-a {
     text-decoration: none;
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     padding: 0.7rem;
 }
 
@@ -100,9 +100,8 @@
 }
 
 .menu-items {
-    padding-top: 120px;
+    padding-top: 100px;
     box-shadow: inset 0 0 2000px white;
-    height: 100vh;
     width: 99%;
     transform: translate(-150%);
     display: flex;
@@ -116,12 +115,12 @@
 }
 
 .li-item-a {
-    margin-bottom: 1.2rem;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 500;
     color: white;
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 10px;
 }
 
@@ -129,7 +128,7 @@
     position: absolute;
     top: 5px;
     right: 15px;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: #0e2431;
 }
 
@@ -144,6 +143,24 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+}
+
+.navItemChild {
+    text-decoration: none;
+    color: white;
+}
+
+.info img {
+    width: 70px;
+}
+
+.count {
+    background: var(--primary-color);
+    color: var(--white);
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    text-align: center;
 }
 
 .nav-container input[type='checkbox']:checked ~ .menu-items {
